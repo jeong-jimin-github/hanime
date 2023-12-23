@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Anime</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<script>
+  const token = Math.floor(Math.random() * (Math.pow(2, 32) - 1))
+  var time = "month";
+  var page = "1"
+    
+  function click(url) {
+    const slug = url;
+    const token = Math.floor(Math.random() * (Math.pow(2, 32) - 1))
+      fetch("https://corsproxy.io/?https://hanime.tv/api/v8/video?id="+slug, {
+        method: "GET",
+        headers: { "X-Signature-Version": "web2","X-Signature": String(token),'User-Agent': "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0" },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+            const url = data['videos_manifest']['servers'][0]['streams'][1]['url']
+            localStorage.setItem("url", url);
+            document.location.href = '/video.html';
+          });
+  }
+  function get() {
+  fetch("https://corsproxy.io/?https://hanime.tv/api/v8/browse-trending?time="+time+"&page="+page+"&order_by=views&ordering=desc", {
+      method: "GET",
+      headers: { "X-Signature-Version": "web2","X-Signature": String(token),'User-Agent': "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0" },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        for(const x of data["hentai_videos"]) {
+          const parent = document.getElementById("h_video");
+          const button = document.createElement('button');
+          button.onclick = function() {
+            click(x['slug']);
+          };
+          button.style.borderRadius = '5%';
+          button.style.margin = '10px';
+          const html = `<div><img id='thumbnail' src="${x['cover_url']}" /><p id='title'>${x['name']}</p></div>`;
+          button.innerHTML = html;
+          parent.appendChild(button);
+        }
+        });}
+        get();
+
+</script>
+<body>
+<div id="tranding">
+  <h3 style="font-weight: bold;margin: 10px;">🔥 인기</h3>
+  <div id="h_video"></div>
+</div>
+
+<style>
+#trending {
+    display: flex;
+    margin: 10px;
+    white-space: nowrap;
+    overflow: scroll;
+}
+#title {
+    margin: 10px;
+    width: 100px;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    white-space: nowrap;
+    word-break:break-all
+}
+#thumbnail {
+    width: 100px;
+    height: 140px;
+    margin: 10px;
+}
+</style>
+</body>
+</html>
