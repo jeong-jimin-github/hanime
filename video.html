@@ -10,7 +10,7 @@
 </head>
 
 <body>
-  <video id="video"></video>
+  <video id="video" controls></video>
 
   <script>
     var video = document.getElementById('video');
@@ -21,13 +21,12 @@
       hls.attachMedia(video);
       hls.on(Hls.Events.MANIFEST_PARSED, function() {
         document.getElementById('video').addEventListener('click', function () {
-        video.play();
-});
+        video.play();}
       });
     }
     else if (video.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = hlsUrl;
-      video.addEventListener('loadedmetadata', function() {
+      video.addEventListener('click', function() {
         video.play();
       });
     }
