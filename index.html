@@ -20,7 +20,7 @@
         .then((response) => response.json())
         .then((data) => {
             const url = data['videos_manifest']['servers'][0]['streams'][1]['url']
-            localStorage.setItem("url", url);
+            localStorage.setItem("url", "https://corsproxy.io/?" + url);
             document.location.href = '/hanime/video.html';
           });
   }
